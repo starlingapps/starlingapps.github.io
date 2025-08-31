@@ -1,9 +1,9 @@
 ---
 layout: default
-title: Blog Técnico - Emmanuel García de Santiago
+title: StarlingApps Articulos
 ---
 
-# Bienvenido a mi Blog Técnico
+# Bienvenido
 
 Aquí encontrarás artículos sobre **Docker, Kubernetes, Go y más**.
 
