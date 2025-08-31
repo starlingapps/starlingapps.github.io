@@ -21,10 +21,11 @@ a:hover {
 
 pre, code {
   background: #111;
-  color: #0f0;
+  color: white;
   padding: 0.5em;
   border-radius: 5px;
 }
+
 
 hr {
   border: 1px solid #444;
