@@ -3,10 +3,20 @@ body {
   color: #ddd;
   font-family: "Helvetica Neue", Arial, sans-serif;
   line-height: 1.6;
+  margin: 2em;
+}
+
+header h1 {
+  color: #fff;
 }
 
 a {
   color: #4da3ff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 pre, code {
@@ -15,3 +25,9 @@ pre, code {
   padding: 0.5em;
   border-radius: 5px;
 }
+
+hr {
+  border: 1px solid #444;
+  margin: 2em 0;
+}
+
