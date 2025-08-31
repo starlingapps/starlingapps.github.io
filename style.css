@@ -1,0 +1,17 @@
+body {
+  background-color: #000;
+  color: #ddd;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.6;
+}
+
+a {
+  color: #4da3ff;
+}
+
+pre, code {
+  background: #111;
+  color: #0f0;
+  padding: 0.5em;
+  border-radius: 5px;
+}
