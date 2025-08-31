@@ -1,4 +1,4 @@
-# Ejecutar tu primer contenedor Docker
+# Instalacion Docker
 
 Desde la página oficial de Docker podemos ver las diferentes instalaciones de Docker para Windows, Mac OS y Linux.  
 En esta ocasión vamos a instalar Docker en una distribución de Linux. La razón principal es que Docker fue desarrollado principalmente para Linux.
