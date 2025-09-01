@@ -1,195 +1,239 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Instalar Postgres en GCP con Replicación y Failover - Part 1</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.css" rel="stylesheet">
-<style>
-body {
-    background-color: #121212;
-    color: #f0f0f0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-h1, h2, h3, h4, h5 {
-    color: #ffffff;
-}
-hr {
-    border-top: 1px solid #333;
-}
-.container {
-    display: flex;
-    justify-content: center;
-}
-.card {
-    background-color: #1e1e1e;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.7);
-    max-width: 900px;
-    width: 100%;
-}
-pre {
-    position: relative;
-    background-color: #272822;
-    color: #f8f8f2;
-    padding: 2.5rem 1rem 1rem 1rem;
-    border-radius: 8px;
-    overflow-x: auto;
-    margin-bottom: 1rem;
-    font-family: "Fira Code", "Courier New", monospace;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-}
-pre::-webkit-scrollbar {
-    height: 10px;
-}
-pre::-webkit-scrollbar-track {
-    background: #1e1e1e;
-    border-radius: 5px;
-}
-pre::-webkit-scrollbar-thumb {
-    background: #0dcaf0;
-    border-radius: 5px;
-}
-pre::-webkit-scrollbar-thumb:hover {
-    background: #00bcd4;
-}
-.copy-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: #0dcaf0;
-    border: none;
-    color: #000;
-    padding: 3px 8px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.8rem;
-    z-index: 10;
-}
-p, li {
-    color: #e0e0e0;
-}
-ul li {
-    margin-bottom: 0.5rem;
-}
-a {
-    color: #0dcaf0;
-    text-decoration: none;
-}
-a:hover {
-    text-decoration: underline;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Instalar Postgres en GCP con Replicación y Failover - Part 1</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #121212;
+      color: #f0f0f0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    h1, h2, h3, h4, h5 {
+      color: #ffffff;
+    }
+    hr {
+      border-top: 1px solid #333;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+    }
+    .card {
+      background-color: #1e1e1e;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+      max-width: 900px;
+      width: 100%;
+    }
+    pre {
+      position: relative;
+      background-color: #272822;
+      color: #f8f8f2;
+      padding: 2.5rem 1rem 1rem 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin-bottom: 1rem;
+      font-family: "Fira Code", "Courier New", monospace;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    pre::-webkit-scrollbar {
+      height: 10px;
+    }
+    pre::-webkit-scrollbar-track {
+      background: #1e1e1e;
+      border-radius: 5px;
+    }
+    pre::-webkit-scrollbar-thumb {
+      background: #0dcaf0;
+      border-radius: 5px;
+    }
+    pre::-webkit-scrollbar-thumb:hover {
+      background: #00bcd4;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #0dcaf0;
+      border: none;
+      color: #000;
+      padding: 3px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      z-index: 10;
+    }
+    p, li {
+      color: #e0e0e0;
+    }
+    ul li {
+      margin-bottom: 0.5rem;
+    }
+    a {
+      color: #0dcaf0;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
 <div class="container py-4">
   <div class="card">
     <header class="mb-4 text-center">
-        <h1>Instalar Postgres en GCP con Replicación y Failover - Part 1</h1>
-        <p>Aprende a instalar y configurar PostgreSQL manualmente en Google Cloud Platform</p>
-        <hr>
+      <h1>Instalar Postgres en GCP con Replicación y Failover - Part 1</h1>
+      <p>Configuración paso a paso de PostgreSQL en Google Cloud con replicación y alta disponibilidad</p>
+      <hr>
     </header>
 
     <main>
-    <article class="post">
+      <article class="post">
+        <p>Lo primero que debemos tener es la cuenta creada con Google que nos entregue un credito inicial de 300 dolares, dar de alta una tarjeta de credito vpalida, este paso es requerido por Google, no se haran cargos al terminar los creditos que nos entrega, en lugar de eso, nuestros servicios se detendran y ya no generaran nuevos cargos, a menos que nosotros mismos actualicemos nuestro plan.</p>
 
-      <p>Lo primero que debemos tener es la cuenta creada con Google que nos entregue un crédito inicial de 300 dólares, dar de alta una tarjeta de crédito válida. Este paso es requerido por Google; no se harán cargos al terminar los créditos que nos entrega, en lugar de eso, nuestros servicios se detendrán.</p>
+        <p>Vamos a utilizar Compute Engines para esto, no vamos a utilizar el servicio administrado que ofrece Google con Cloud SQL, en su lugar vamos a revisar como hacer la instalación de forma manual creando dos instancias en el servicio de Compute Engine de Google, cambiamos el sistema operativo a Ubuntu 20.04 LTS y el resto lo dejamos por defecto.</p>
 
-      <p>Vamos a utilizar Compute Engine para esto, no utilizaremos el servicio administrado Cloud SQL. Crearemos dos instancias en Compute Engine, cambiando el sistema operativo a Ubuntu 20.04 LTS y dejando el resto por defecto.</p>
+        <p>El nombre de las maquinas virtuales puede ser master y slave o node1 y node2, primary y replication etc, seleccionen los nombres de acuerdo a su conveniencia, generalmente vamos a indicar que una de las maquinas tendra el rol principal y la otra de secundaria, los roles van cambiar cuando se inicie el tema de failover, solo sean consistentes y recuerden los nombres dados, en mi caso yo las estoy nombrando como pg-master y pg-slave, eso me parecio buena idea al principio para explicar algunos conceptos.</p>
 
-      <p>Los nombres de las máquinas virtuales pueden ser <strong>master y slave</strong>, <strong>node1 y node2</strong>, o <strong>primary y replication</strong>. En mi caso las nombré como <strong>pg-master</strong> y <strong>pg-slave</strong>.</p>
+        <p>Una vez iniciadas las dos instancias, ingresamos en ellas mediante SSH, cambiamos nuestro usuario a root con el comando <code>sudo -i</code> e ingresamos los siguientes comandos:</p>
 
-      <h4>Instalación de PostgreSQL</h4>
-      <p>Ingresamos a cada instancia mediante SSH, cambiamos a root y ejecutamos:</p>
-      <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash">sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash"># Creara el archivo con la configuración del repositorio
+sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+
+# Importamos la llave de firmado del repositorio:
 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+
+# Uactualizamos la lista de paquetes:
 sudo apt-get update
+
+# Instalamos la versión de postgres.
+# En nuestro caso seleccionamos la version 13, puedes seleccionar alguna otra depentiendo de tus necesidades:
 sudo apt-get -y install postgresql-13</code></pre>
 
-      <p>Verificar instalación:</p>
-      <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash">systemctl status postgresql
+        <p>Para verificar las dos versiones en las dos maquinas ejecutamos alguno de los siguientes comandos:</p>
+
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash"># Este comando nos dara la salida del status del servicio
+systemctl status postgresql
+# o bien este comando para ver como se levanto el servicio de postgres
 ps -feq | grep postgresql</code></pre>
 
-      <h4>Pruebas iniciales en PostgreSQL</h4>
-      <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash">sudo -i
+        <p>Una vez instalado esto, ahora podemos conectarnos para revisar algunos comandos en postgres y validar que todo este funcionando correctamente. Hacer la prueba en ambas maquinas para revisar que todo funcione correctamente en las dos instancias.</p>
+
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash"># Primero accedemos como root
+sudo -i
+# Cambiamos al usuario postgres
 su - postgres
+# Listamos las bases actuales en postgres
 psql -l
+# Seleccionamos alguna de las bases
 psql -d postgres
+# Con el prompt de postgres listamos algunas tablas dentro de esa base, es posible que no vean ninguna tabla pero es normal
 \dt+
+# Salir del prompt de postgres
 \q</code></pre>
 
-      <p>Crear base de datos de prueba en <strong>pg-master</strong>:</p>
-      <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash">su - postgres
+        <p>En el primer nodo, pg-master vamos a crear una base de datos de prueba, solo en pg-master, no ejecuten los comandos en la otra maquina.</p>
+
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash">su - postgres
 psql
 create database demo;
 \q
+
+# Ingresar nuevamente con la base demo
 psql -d demo
 create table test (int serial);
+\dt
 insert into test (select generate_series(1,1000));
 select count(*) from test;
 \q</code></pre>
 
-      <h4>Archivos de configuración de Postgres</h4>
-      <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash">psql
+        <p>Antes de empezar con la replicacion, es necesarios conocer donde se encuentran los archivos de configuración de Postgres, los ejemplos siguientes fueron tomados de uns instalación por default de Postgres 13.x, sin embargo la ubicación puede cambiar entre versiones o dependiendo de la configuración de cada proyecto.</p>
+
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-sql">psql
 SHOW config_file;
 SHOW data_directory;
 SHOW hba_file;</code></pre>
 
-      <h4>Configuración de replicación en pg-master</h4>
-      <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash">sudo -i
+        <p>Vamos a continuar con el primer paso que es la replicación, cuando todo este configurado, vamos a ver los mismos datos en el otro nodo, pg-slave sin haber hecho ningun comando para crear la base o la tabla.</p>
+
+        <p>En el nodo pg-master hacemos lo siguiente</p>
+
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash">sudo -i
 su - postgres
 psql -U postgres -c 'SHOW config_file'
 exit
+
 vi /etc/postgresql/13/main/postgresql.conf
 listen_addresses = '*'
 wal_level = replica
 synchronous_commit = off
 max_wal_senders = 10
 synchronous_standby_names = '*'
+
 vi /etc/postgresql/13/main/pg_hba.conf
 host    replication     rep_user        10.128.0.0/24           md5
+
 su - postgres
 createuser --replication -P rep_user
 exit
 systemctl restart postgresql</code></pre>
 
-      <h4>Configuración de pg-slave</h4>
-      <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash">sudo -i
+        <p>Aqui una aclaración, vamos a utilizar un mecanismo de replicacion llamado streaming, lo que significa que estaremos sincronizando mediante archivos todos los cambios hechos en un nodo, es decir una replicacion fisica, no logica que sería con transacciones, consultas sql etc. por defecto esta replicacion es asincrona, y postgres se encarga de mandar los cambios entre nodos de acuerdo a su configuración mas optima, sin embargo si nonostor forzamos a que la replicación por stream sea sincrona, lo cual se logra haciendo lo siguiente:</p>
+
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-sql">synchronous_commit = on</code></pre>
+
+        <p>Esto igualmente funcionaria, pero si por alguna razon el nodo de replica es inaccesible, postgres intentara hacer la replica y tener esa confirmación de escritura antes de regresar una respuesta final al cliente (me refiero a un cliente de base de datos o una aplicacion por ejemplo), al no haber respuesta existosa de la replica inaccesible, postgres mandara regresara un error al cliente, es decir que aun cuando se pudiera aplicar el cambio en el nodo primario, para los clientes toda la base de datos no funcionaría, esto pasaría solo con consultas de escritura, las consultas de lectura seguirian funcionando.</p>
+
+        <p>Ahora vamos al nodo pg-slave</p>
+
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash">sudo -i
 systemctl stop postgresql
 rm -rf /var/lib/postgresql/13/main/*
+
 su - postgres
 pg_basebackup -R -h 10.128.0.10 -U rep_user -D /var/lib/postgresql/13/main -P
 exit
+
 vi /etc/postgresql/13/main/postgresql.conf
 listen_addresses = '*'
 hot_standby = on
+
 systemctl start postgresql</code></pre>
 
-      <h4>Prueba de replicación</h4>
-      <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash"># En pg-master
+        <p>Eso es todo, ahora podemos revisar si tenemos la misma base de datos demo en el nodo pg-slave y con los mismos registros en la tabla test.</p>
+
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-sql">-- En el nodo pg-master
 sudo -i
 su - postgres
 psql -d demo
 insert into test (select generate_series(1,1000));
 select count(*) from test;
 
-# En pg-slave
+-- En el nodo pg-slave
 sudo -i
 su - postgres
 psql -d demo
-select count(*) from test;</code></pre>
+select count(*) from test;
 
-      <p>El nodo <strong>pg-slave</strong> funciona como <em>hot_standby</em>, permitiendo consultas de solo lectura y replicando automáticamente los cambios de pg-master.</p>
+-- Intentar insertar en pg-slave (error)
+insert into test (select generate_series(1,1000));
+ERROR</code></pre>
 
-      <p>Para alta disponibilidad, se recomienda ubicar las máquinas en diferentes zonas o regiones y configurar adecuadamente las reglas de firewall de Google Cloud.</p>
+        <p>Algunas cosas que se deben aclarar hasta el momento:</p>
+        <ul>
+          <li>El nodo pg-slave funciona como <em>hot_standy</em>, lo que significa que el nodo puede ser usuado como replicacion del nodo pg-master, y ademas que un cliente puede acceder a ese nodo para consultas de solo lectura.</li>
+          <li>Todo cambio hecho en el nodo pg-master se vera reflejado en el nodo pg-slave, si el nodo pg-slave se detiene, en cuanto este en linea nuevamente, la replicacion intentara sincronizar los nodos automaticamente, por lo que no hay necesidad de hacer el proceso de backup inicial nuevamente.</li>
+          <li>Si se requiere tener alta disponibilidad con esta configuración, es posible crear las maquinas virtuales en diferentes zonas o incluso regiones, sin embargo habra que tomar en cuenta detalles para comunicar debido a alguna restricción de firewall que implemente Google entre las maquinas, tomar en cuenta esto.</li>
+        </ul>
 
-      <hr>
-      <h3>Conclusión</h3>
-      <p>Hasta aquí la Part 1. En el siguiente artículo revisaremos los temas de failover y roles de las instancias.</p>
-
-    </article>
+        <p>Hasta aqui con este post, nos vemos en el siguiente para ver temas de failover.</p>
+      </article>
     </main>
 
     <footer class="mt-5 text-center">
@@ -201,6 +245,7 @@ select count(*) from test;</code></pre>
 
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-sql.min.js"></script>
 <script>
 function copyCode(btn) {
     const code = btn.nextElementSibling.textContent;
