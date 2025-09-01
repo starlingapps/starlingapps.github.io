@@ -34,7 +34,7 @@ pre {
     position: relative;
     background-color: #272822;
     color: #f8f8f2;
-    padding: 2.5rem 1rem 1rem 1rem; /* padding-top extra para el botón */
+    padding: 2.5rem 1rem 1rem 1rem;
     border-radius: 8px;
     overflow-x: auto;
     margin-bottom: 1rem;
@@ -87,7 +87,7 @@ a:hover {
 <div class="container py-4">
   <div class="card">
     <header class="mb-4 text-center">
-        <h1 class="page-title">Ejecutar tu primer contenedor Docker</h1>
+        <h1>Ejecutar tu primer contenedor Docker</h1>
         <hr>
     </header>
 
@@ -96,13 +96,13 @@ a:hover {
 
       <p>Desde la página oficial de Docker podemos ver las diferentes instalaciones de Docker para Windows, Mac OS y Linux.</p>
 
-      <p>En esta ocasión vamos a instalar Docker en una distribución de Linux. No hay una razón en especial, aunque si pudiera dar alguna, diría que es porque Docker es una herramienta desarrollada primordialmente para este sistema operativo.</p>
+      <p>En esta ocasión vamos a instalar Docker en una distribución de Linux, no hay una razón en especial, aunque si pudiera dar alguna, diría que es porque Docker es una herramienta desarrollada para este sistema operativo primordialmente.</p>
 
-      <p>Vamos a comenzar: yo tuve que crear una máquina virtual con Virtual Box y descargué la siguiente versión <strong>Ubuntu-18.04.3-desktop</strong>. Esta versión es soportada para instalar Docker. En caso de que ya tengas Linux instalado, verifica si tu versión está certificada para poder usar Docker.</p>
+      <p>Vamos a comenzar, yo tuve que crear una máquina virtual con VirtualBox y descargué la siguiente versión: Ubuntu-18.04.3-desktop. Esta versión es soportada para instalar Docker. En caso de que tengas una versión de Linux ya instalada, favor de verificar si está certificada para poder usar Docker.</p>
 
-      <p>La instalación de mi Linux es limpia y lo hice sobre una máquina virtual porque mi sistema operativo es Windows. Sin embargo, hay varias opciones: pueden instalar Docker para Windows, o instalar Ubuntu en su máquina base mediante una partición y usar arranque dual, o instalar completamente Ubuntu. La más sencilla para mí fue crear una máquina virtual para ejecutar diferentes pruebas.</p>
+      <p>La instalación de mi Linux es limpia y lo hice sobre una máquina virtual porque mi sistema operativo es Windows; pero aquí hay varias opciones: pueden instalar Docker para Windows, o pueden instalar Ubuntu en su máquina base ya sea mediante una partición y usar un arranque dual o instalar completamente Ubuntu; la más sencilla para mí fue crear una máquina virtual para ejecutar diferentes pruebas.</p>
 
-      <p>Instala el ISO de Ubuntu con las opciones por defecto. Una vez en la máquina virtual, vamos a instalar Docker con el administrador de paquetes. Existen otras opciones, pero he seleccionado esta porque permite actualizar o regresar a otra versión de manera rápida. Ahora debemos ejecutar los siguientes comandos desde una shell:</p>
+      <p>Instalar el ISO de Ubuntu con las opciones por defecto. Una vez en la máquina virtual inicie, vamos a instalar Docker con el administrador de paquetes. Existen otras opciones, pero he seleccionado esta debido a que es una buena opción para actualizar o regresar una versión de manera rápida. Ahora debemos ejecutar los siguientes comandos desde una shell:</p>
 
       <h4>Revisar la versión instalada</h4>
       <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash">cat /etc/lsb-release
@@ -116,13 +116,13 @@ DISTRIB_DESCRIPTION="Ubuntu 18.04.3 LTS"</code></pre>
 
       <h4>Instalar los paquetes requeridos</h4>
       <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash">sudo apt-get -y install \
-apt-transport-https \
-ca-certificates \
-curl \
-gnupg-agent \
-software-properties-common</code></pre>
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg-agent \
+    software-properties-common</code></pre>
 
-      <h4>Agregar la Docker GPG Key y el repositorio</h4>
+      <h4>Agregar Docker GPG Key y repositorio</h4>
       <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash">curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo apt-key fingerprint 0EBFCD88
 sudo add-apt-repository \
@@ -130,30 +130,37 @@ sudo add-apt-repository \
   $(lsb_release -cs) \
   stable"</code></pre>
 
-      <h4>Instalar Docker CE versión 5:18.09.5~3-0~ubuntu-bionic</h4>
+      <h4>Instalar Docker CE versión 18.09.5</h4>
       <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash">sudo apt-get update
-sudo apt-get install -y docker-ce=5:18.09.5~3-0~ubuntu-bionic docker-ce-cli=5:18.09.5~3-0~ubuntu-bionic containerd.io
-apt-cache madison docker-ce</code></pre>
+sudo apt-get install -y docker-ce=5:18.09.5~3-0~ubuntu-bionic docker-ce-cli=5:18.09.5~3-0~ubuntu-bionic containerd.io</code></pre>
+
+      <h4>Revisar otras versiones disponibles</h4>
+      <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash">apt-cache madison docker-ce</code></pre>
 
       <h4>Verificar la instalación</h4>
       <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash">sudo docker version</code></pre>
 
-      <h4>Agregar a nuestro usuario al grupo Docker</h4>
+      <p>Agregar a nuestro usuario, en mi caso se llama <strong>dev</strong>, al grupo docker que se creó con la instalación:</p>
       <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash">sudo usermod -a -G docker dev</code></pre>
-      <p>Este paso es necesario para no escribir los comandos con <code>sudo</code>. Cierra la terminal y abre una nueva para que los cambios tengan efecto. En mi caso, este paso no funcionó, por lo que tuve que reiniciar la máquina completa.</p>
+
+      <p>Este paso es necesario para no estar escribiendo los comandos con <code>sudo</code>. Cerrar la terminal y abrir una nueva para que los cambios tomen efecto. En mi caso este paso no funcionó, por lo que tuve que reiniciar la máquina completa.</p>
 
       <h4>Ejecutar tu primer contenedor</h4>
       <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash">docker run hello-world</code></pre>
-      <p>Este comando descarga una imagen llamada <code>hello-world</code>. Si no existe en tu máquina local, se descargará automáticamente desde Docker Hub, se creará un contenedor y se ejecutará el servicio, el cual solo manda un mensaje a la consola y luego termina.</p>
+
+      <p>Este comando descarga una imagen llamada <strong>hello-world</strong>. En caso de que no exista en tu máquina local, esta se descargará desde Docker Hub. Automáticamente después se creará un contenedor y ejecutará el servicio que contiene, el cual solo manda un mensaje a la consola para luego terminar.</p>
 
       <h4>Configurar Docker Compose</h4>
-      <p>Antes de terminar, vamos a configurar Docker Compose. Esto sirve para levantar varios contenedores utilizando un archivo como Dockerfile, generando un ambiente en un solo nodo con varios contenedores (llamados servicios).</p>
-      <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash">sudo curl -L "https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-docker-compose version</code></pre>
-      <p>Descargamos el binario, le dimos permisos y revisamos la versión. Eso sería todo.</p>
+      <p>Esto sirve para levantar varios contenedores utilizando un archivo como el Dockerfile, pero para generar un ambiente en un solo nodo con varios contenedores, llamados servicios.</p>
 
-      <h4>Crear archivo docker-compose.yaml</h4>
+      <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash">$ sudo curl -L "https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+$ sudo chmod +x /usr/local/bin/docker-compose
+$ docker-compose version</code></pre>
+
+      <p>Lo que hicimos fue descargar el binario, darle permisos y revisar la versión, eso sería todo.</p>
+
+      <h4>Verificar Docker Compose</h4>
+      <p>Vamos a crear un archivo llamado <strong>docker-compose.yaml</strong>. En realidad el nombre no es importante en este caso. Agregar el siguiente contenido:</p>
       <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-yaml">version: '3'
 services:
   web:
@@ -162,17 +169,18 @@ services:
     - "8080:80"
   redis:
     image: redis:alpine</code></pre>
-      <p>Este archivo contiene un solo servicio, que es la forma de llamar a los contenedores en Docker Compose. Este comando podría haberse hecho de forma declarativa con el mismo resultado, solo es para fines demostrativos.</p>
 
-      <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash">docker-compose up -d</code></pre>
-      <p>Con este comando levantamos nuestros servicios en la misma máquina, un solo nodo.</p>
+      <p>Este archivo contiene un solo servicio, el cual es la forma de llamar a los contenedores en docker-compose. Este comando podría haberse hecho de forma declarativa con el mismo resultado, solo es para fines demostrativos.</p>
 
-      <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash">docker-compose ps
-docker-compose down</code></pre>
+      <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash">$ docker-compose up -d</code></pre>
 
-      <hr>
-      <h3>Conclusión</h3>
-      <p>Esto es todo. Con Docker y Docker Compose instalados, puedes empezar a levantar contenedores y explorar Docker Hub.</p>
+      <p>Con ese comando levantamos nuestros servicios en la misma máquina, un solo nodo.</p>
+
+      <h4>Verificar y detener contenedores</h4>
+      <pre><button class="copy-btn" onclick="copyCode(this)">Copy Code</button><code class="language-bash">$ docker-compose ps
+$ docker-compose down</code></pre>
+
+      <p>Esto es todo.</p>
 
     </article>
     </main>
@@ -187,7 +195,6 @@ docker-compose down</code></pre>
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
-
 <script>
 function copyCode(btn) {
     const code = btn.nextElementSibling.textContent;
@@ -200,4 +207,3 @@ function copyCode(btn) {
 
 </body>
 </html>
-
