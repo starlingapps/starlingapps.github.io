@@ -37,9 +37,6 @@ a:hover {
     color: #00bcd4;
     text-decoration: underline;
 }
-ul li {
-    margin-bottom: 0.5rem;
-}
 p {
     color: #e0e0e0;
 }
@@ -50,13 +47,65 @@ p {
 .index-section {
     margin-top: 2rem;
 }
+
+/* 🎴 Tarjetas en el índice */
+.index-section ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr; /* ✅ Solo una tarjeta por fila */
+    gap: 1rem;
+}
+.index-section li {
+    perspective: 1000px;
+}
+.index-section a {
+    display: block;
+    padding: 1rem;
+    border-radius: 12px;
+    background: linear-gradient(145deg, #1c1c1c, #252525);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.6);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ✨ Brillo al pasar el mouse */
+.index-section a::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(120deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+    transform: rotate(25deg);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.index-section a:hover::before {
+    opacity: 1;
+    animation: shine 1s forwards;
+}
+
+/* 🔹 Hover sin inclinación */
+.index-section a:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.9), 0 0 15px rgba(0,188,212,0.6);
+}
+
+@keyframes shine {
+    0% { transform: translateX(-100%) rotate(25deg); }
+    100% { transform: translateX(100%) rotate(25deg); }
+}
 </style>
 </head>
 <body>
 <div class="container py-4">
   <div class="card">
     <header class="header-title">
-      <h1 class="page-title">Starling Apps Artículos</h1>
+      <h1>Artículos de Starling Apps</h1>
+      <p>Explora los contenidos disponibles</p>
       <hr>
     </header>
 
@@ -67,9 +116,12 @@ p {
       </section>
 
       <section id="articulos" class="index-section">
-        <h2>Índice:</h2>
+        <h2>Lista de artículos</h2>
         <ul>
           <li><a href="/articulos/ejecutar-primer-contenedor-docker.html">Ejecutar tu primer contenedor Docker</a></li>
+          <li><a href="/articulos/springboot-rest-api.html">Creando tu primera API con Spring Boot</a></li>
+          <li><a href="/articulos/aws-deploy.html">Desplegar en AWS paso a paso</a></li>
+          <li><a href="/articulos/kubernetes-intro.html">Introducción a Kubernetes</a></li>
         </ul>
       </section>
     </main>
@@ -82,4 +134,3 @@ p {
 </div>
 </body>
 </html>
-
